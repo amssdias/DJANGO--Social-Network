@@ -10,5 +10,3 @@ jobs:
       - name: Install Django
         run: 
           pip install --user django
-          
-          python manage.py test
