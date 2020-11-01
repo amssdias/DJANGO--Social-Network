@@ -1,0 +1,68 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+    <div class="container">
+
+            <br><br>
+            {% if user.is_authenticated %}
+                <form action="{% url 'network:add_post' %}" method="POST">
+                    {% csrf_token %}
+                    {{ form.post }}
+                    <button type="submit" class="btn btn-primary mt-3 pr-4 pl-4">Post</button>
+                </form>
+            {% endif %}
+            
+            <br>
+            <h2 class="h2 text-white mt-4">All Posts</h2>
+            {% for post in posts %}
+                <div class="border rounded  mb-3 pl-3 pt-3 pb-3 posts">
+                    <h5 class="h5"><a href="{% url 'network:profile' post.user.id %}">{{post.user | capfirst}}</a></h5>
+                    <p id="post-{{ post.id }}">{{post.post}}</p>
+                    <p>
+                        <!-- if no one made like -->
+                        {% if post.likes.count == 0 %}
+                            <i class="far fa-heart text-danger like" data-like="{{ post.id }}"></i>
+                            <i class="fas fa-heart text-danger d-none unlike" data-unlike="{{ post.id }}"></i>
+                        {% else %}
+
+                            <!-- if the user haven't liked -->
+                            {% if request.user not in post.likes.all %}
+                                <i class="far fa-heart text-danger like" data-like="{{ post.id }}"></i>
+                                <i class="fas fa-heart text-danger d-none unlike" data-unlike="{{ post.id }}"></i>
+                            {% else %}
+                                <i class="fas fa-heart text-danger unlike" data-unlike="{{ post.id }}"></i>
+                                <i class="far fa-heart text-danger d-none like" data-like="{{ post.id }}"></i>
+                            {% endif %}
+
+                        {% endif %}
+
+                        
+                            
+                        <span data-postLikes="{{ post.id }}">{{post.likes.count }}</span>
+                             
+                    </p>
+                    <p class="text-info">{{post.date}}</p>
+
+                    {% if user.is_authenticated %}
+                        {% if user.id == post.user.id %}
+                            <button class="btn btn-primary edit" id="edit-{{post.id}}">Edit</button>
+                            <button class="btn btn-primary save d-none" id="save-{{post.id}}">Save</button>
+                        {% endif %}
+                    {% endif %}
+                    
+                </div>
+            {% endfor %}
+
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    {% if posts.has_previous %}
+                        <li class="page-item"><a class="page-link" href="{% url 'network:index' %}?page={{ posts.previous_page_number }}">Previous</a></li>
+                    {% endif %}
+                    {% if posts.has_next %}
+                        <li class="page-item"><a class="page-link" href="{% url 'network:index' %}?page={{ posts.next_page_number }}">Next</a></li>
+                    {% endif %}
+                    
+                </ul>
+            </nav>
+    </div>
+{% endblock %}

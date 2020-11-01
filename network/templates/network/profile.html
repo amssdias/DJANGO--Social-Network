@@ -1,0 +1,80 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="display-3 d-flex justify-content-center mt-2 mb-3 profile-name">{{ user_profile|capfirst }}</h1>
+        <div class="d-flex justify-content-around mb-3">
+            <h2 class="h2">Following: {{ following }}</h2>
+            <h2 class="h2">Followers: <span id="followers">{{ followers }}</span></span></h2>
+        </div>
+    
+        <!-- If we not watching own profile -->
+        {% if request.user.id != user_profile.id %}
+
+            <!-- if user not logged in -->
+            {% if request.user.id != None %}
+                <div class="d-flex justify-content-center mb-5">
+                    {% if not follow %}
+                        <button class="btn btn-light" id="follow" data-follower="{{request.user.id}}" data-userid="{{ user_profile.id }}">Follow</button>
+                        <button class="btn btn-light d-none" id="unfollow" data-follower="{{request.user.id}}" data-userid="{{ user_profile.id }}">Unfollow</button>
+                    {% else %}
+                        <button class="btn btn-light" id="unfollow" data-follower="{{request.user.id}}" data-userid="{{ user_profile.id }}">Unfollow</button>
+                        <button class="btn btn-light d-none" id="follow" data-follower="{{request.user.id}}" data-userid="{{ user_profile.id }}">Follow</button>
+                    {% endif %}
+                </div>
+            {% endif %}
+            
+        {% endif %}
+
+        {% for post in posts %}
+            <div class="border rounded posts mb-3 pl-3 pt-3 pb-3">
+                <h5 class="h5"><a href="{% url 'network:profile' post.user.id %}">{{post.user | capfirst}}</a></h5>
+                <p id="post-{{ post.id }}">{{post.post}}</p>
+                <p>
+                    <!-- if no one made like -->
+                    {% if post.likes.count == 0 %}
+                        <i class="far fa-heart text-danger like" data-like="{{ post.id }}"></i>
+                        <i class="fas fa-heart text-danger d-none unlike" data-unlike="{{ post.id }}"></i>
+                    {% else %}
+
+                        <!-- if the user haven't liked -->
+                        {% if request.user not in post.likes.all %}
+                            <i class="far fa-heart text-danger like" data-like="{{ post.id }}"></i>
+                            <i class="fas fa-heart text-danger d-none unlike" data-unlike="{{ post.id }}"></i>
+                        {% else %}
+                            <i class="fas fa-heart text-danger unlike" data-unlike="{{ post.id }}"></i>
+                            <i class="far fa-heart text-danger d-none like" data-like="{{ post.id }}"></i>
+                        {% endif %}
+
+                {% endif %}
+
+                
+                    
+                    <span data-postLikes="{{ post.id }}">{{post.likes.count }}</span>
+                    
+                </p>
+                <p class="text-info">{{post.date}}</p>
+
+                {% if user.is_authenticated %}
+                    {% if user.id == post.user.id %}
+                        <button class="btn btn-primary edit" id="edit-{{post.id}}">Edit</button>
+                        <button class="btn btn-primary save d-none" id="save-{{post.id}}">Save</button>
+                    {% endif %}
+                {% endif %}
+            </div>
+
+        {% endfor %}
+
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                {% if posts.has_previous %}
+                    <li class="page-item"><a class="page-link" href="{% url 'network:profile' request.user.id %}?page={{ posts.previous_page_number }}">Previous</a></li>
+                {% endif %}
+                {% if posts.has_next %}
+                    <li class="page-item"><a class="page-link" href="{% url 'network:profile' request.user.id %}?page={{ posts.next_page_number }}">Next</a></li>
+                {% endif %}
+                
+            </ul>
+        </nav>
+    </div>
+{% endblock %}
