@@ -1,6 +1,6 @@
 # DJANGO - Social Network
 
-Twitter-like social network website for making posts and following users.
+Twitter-like social network website for making, editing and liking posts and following users.
 
 > Made on October - 2020
 
