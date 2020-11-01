@@ -96,4 +96,4 @@ class PostsModelTests(TestCase):
         ''' Check how many are following the user
         '''
         user_1 = User.objects.get(username="User1")
-        self.assertEqual(user_1.follow.count(), 3)
+        self.assertEqual(user_1.follower.count(), 3)
