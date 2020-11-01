@@ -1,6 +1,7 @@
 # DJANGO - Social Network
 
 Twitter-like social network website for making, editing and liking posts and following users.
+(NOT RESPONSIVE)
 
 > Made on October - 2020
 
