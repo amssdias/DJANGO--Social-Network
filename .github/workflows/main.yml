@@ -8,5 +8,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Run Django unit tests
-        run: 
+        run: |
           pip install --user django
+          python3 manage.py test
