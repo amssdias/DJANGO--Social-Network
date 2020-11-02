@@ -10,4 +10,5 @@ jobs:
       - name: Install Django
         run: 
           pip install django
-          python manage.py test
+      - name: test
+        run: python manage.py test
