@@ -1,4 +1,4 @@
-# DJANGO - Social Network
+# Social Network
 
 Twitter-like social network website for making, editing and liking posts and following users.
 
